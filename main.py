@@ -15,7 +15,25 @@ def getRegistryValue(key, value_name, deletion_detection=False):
 
 
 def setRegistryValue(key, value_name, new_value, datatype):
-    reg.SetValueEx(key, value_name, 1, datatype, new_value)
+    regtype = None
+    match datatype:
+        case 'REG_SZ':
+            regtype = reg.REG_SZ
+        case 'REG_EXPAND_SZ':
+            regtype = reg.REG_EXPAND_SZ
+        case 'REG_MULTI_SZ':
+            regtype = reg.REG_MULTI_SZ
+        case 'REG_DWORD':
+            regtype = reg.REG_DWORD
+        case 'REG_QWORD':
+            regtype = reg.REG_QWORD
+        case 'REG_BINARY':
+            regtype = reg.REG_BINARY
+        case 'REG_NONE':
+            regtype = reg.REG_NONE
+    if regtype is None:
+        raise ValueError(f"Invalid datatype {datatype}")
+    reg.SetValueEx(key, value_name, 0, datatype, new_value)
 
 
 def openRegistryKey(path):
@@ -64,9 +82,10 @@ def checkAndResetValue(path, value_name, original_value, datatype):
         if str(value) != str(original_value) and input(f"The registery value {value_name} at {path} is set to {str(value)} instead of {str(original_value)}. Do you want to reset it? (y/n) ") == 'y':
             print(f"Resetting registery value {value_name} at {path} to {original_value}")
 
-            print("WARNING: Registry datatypes not yet supported, cannot reset value")
+            print("DEV MODE, NOT ACTUALLY RESETING")
+            #setRegistryValue(key, value_name, original_value, datatype)
+            #TODO RESTORE FOR PROD
 
-            #setRegistryValue(key, value_name, original_value)
         reg.CloseKey(key)
 
 
@@ -76,8 +95,11 @@ def checkValueExistsAndDelete(path, value_name):
         value = getRegistryValue(key, value_name, True)
         if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
             print(f"Deleting registery value {value_name} at {path}")
+
             print("DEV MODE, NOT ACTUALLY DELETING")
             #reg.DeleteValue(key, value_name)
+            #TODO RESTORE FOR PROD
+
         reg.CloseKey(key)
 
 
@@ -127,6 +149,12 @@ def readYamlFile(filename):
     return data
 
 
-yaml_filename = "C:\\Users\\Louis\\Downloads\\Atlas.Playbook.22H2.v0.2\\Configuration\\features\\atlas\\config.yml"
-data = readYamlFile(yaml_filename)
-processActions(data)
+def main():
+    args = sys.argv[1:]
+    if len(args) != 1 or (args[0] == '-h' or args[0] == '--help'):
+        print("Usage: python3 main.py <path to Atlas Playbook Directory>\nTo get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)")
+        exit(1)
+    exit(0)
+
+
+main()
