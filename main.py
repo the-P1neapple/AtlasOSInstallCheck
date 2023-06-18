@@ -1,13 +1,15 @@
 import winreg as reg
 import re
 import yaml
+import sys
 
 
-def getRegistryValue(key, value_name):
+def getRegistryValue(key, value_name, deletion_detection=False):
     try:
         value_value = reg.QueryValueEx(key, value_name)
     except FileNotFoundError:
-        print(f"Could not find value {value_name}")
+        if not deletion_detection:
+            print(f"Could not find value {value_name}")
         return None
     return value_value[0]
 
@@ -16,31 +18,45 @@ def setRegistryValue(key, value_name, new_value, datatype):
     reg.SetValueEx(key, value_name, 1, datatype, new_value)
 
 
-def checkAndResetValue(path, value_name, original_value, datatype):
+def openRegistryKey(path):
     rootdir = path.split('\\')[0]
     initial_key = None
     match rootdir:
-        case 'HKCR': initial_key = reg.HKEY_CLASSES_ROOT
-        case 'HKEY_CLASSES_ROOT': initial_key = reg.HKEY_CLASSES_ROOT
-        case 'HKCU': initial_key = reg.HKEY_CURRENT_USER
-        case 'HKEY_CURRENT_USER': initial_key = reg.HKEY_CURRENT_USER
-        case 'HKLM': initial_key = reg.HKEY_LOCAL_MACHINE
-        case 'HKEY_LOCAL_MACHINE': initial_key = reg.HKEY_LOCAL_MACHINE
-        case 'HKU': initial_key = reg.HKEY_USERS
-        case 'HKEY_USERS': initial_key = reg.HKEY_USERS
-        case 'HKCG': initial_key = reg.HKEY_CURRENT_CONFIG
-        case 'HKEY_CURRENT_CONFIG': initial_key = reg.HKEY_CURRENT_CONFIG
-
+        case 'HKCR':
+            initial_key = reg.HKEY_CLASSES_ROOT
+        case 'HKEY_CLASSES_ROOT':
+            initial_key = reg.HKEY_CLASSES_ROOT
+        case 'HKCU':
+            initial_key = reg.HKEY_CURRENT_USER
+        case 'HKEY_CURRENT_USER':
+            initial_key = reg.HKEY_CURRENT_USER
+        case 'HKLM':
+            initial_key = reg.HKEY_LOCAL_MACHINE
+        case 'HKEY_LOCAL_MACHINE':
+            initial_key = reg.HKEY_LOCAL_MACHINE
+        case 'HKU':
+            initial_key = reg.HKEY_USERS
+        case 'HKEY_USERS':
+            initial_key = reg.HKEY_USERS
+        case 'HKCG':
+            initial_key = reg.HKEY_CURRENT_CONFIG
+        case 'HKEY_CURRENT_CONFIG':
+            initial_key = reg.HKEY_CURRENT_CONFIG
     if initial_key is None:
         raise ValueError(f"Invalid root directory {rootdir}")
     try:
         key = reg.OpenKeyEx(initial_key, path[len(rootdir) + 1:] + '\\')
     except PermissionError:
         print(f"Permission denied to open {path}")
-        return
+        return None
     except FileNotFoundError:
         print(f"Could not find key {path}")
-        return
+        return None
+    return key
+
+
+def checkAndResetValue(path, value_name, original_value, datatype):
+    key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name)
         if datatype == 'REG_BINARY':
@@ -55,34 +71,13 @@ def checkAndResetValue(path, value_name, original_value, datatype):
 
 
 def checkValueExistsAndDelete(path, value_name):
-    rootdir = path.split('\\')[0]
-    initial_key = None
-    match rootdir:
-        case 'HKCR': initial_key = reg.HKEY_CLASSES_ROOT
-        case 'HKEY_CLASSES_ROOT': initial_key = reg.HKEY_CLASSES_ROOT
-        case 'HKCU': initial_key = reg.HKEY_CURRENT_USER
-        case 'HKEY_CURRENT_USER': initial_key = reg.HKEY_CURRENT_USER
-        case 'HKLM': initial_key = reg.HKEY_LOCAL_MACHINE
-        case 'HKEY_LOCAL_MACHINE': initial_key = reg.HKEY_LOCAL_MACHINE
-        case 'HKU': initial_key = reg.HKEY_USERS
-        case 'HKEY_USERS': initial_key = reg.HKEY_USERS
-        case 'HKCG': initial_key = reg.HKEY_CURRENT_CONFIG
-        case 'HKEY_CURRENT_CONFIG': initial_key = reg.HKEY_CURRENT_CONFIG
-    if initial_key is None:
-        raise ValueError(f"Invalid root directory {rootdir}")
-    try:
-        key = reg.OpenKeyEx(initial_key, path[len(rootdir) + 1:] + '\\')
-    except PermissionError:
-        print(f"Permission denied to open {path}")
-        return
-    except FileNotFoundError:
-        print(f"Could not find key {path}")
-        return
+    key = openRegistryKey(path)
     if key:
-        value = getRegistryValue(key, value_name)
+        value = getRegistryValue(key, value_name, True)
         if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
             print(f"Deleting registery value {value_name} at {path}")
-            reg.DeleteValue(key, value_name)
+            print("DEV MODE, NOT ACTUALLY DELETING")
+            #reg.DeleteValue(key, value_name)
         reg.CloseKey(key)
 
 
