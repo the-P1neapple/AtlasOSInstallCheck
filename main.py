@@ -25,15 +25,17 @@ def setRegistryValue(key, value_name, new_value, datatype):
             regtype = reg.REG_MULTI_SZ
         case 'REG_DWORD':
             regtype = reg.REG_DWORD
+            new_value = int(new_value)
         case 'REG_QWORD':
             regtype = reg.REG_QWORD
+            new_value = int(new_value)
         case 'REG_BINARY':
             regtype = reg.REG_BINARY
         case 'REG_NONE':
             regtype = reg.REG_NONE
     if regtype is None:
         raise ValueError(f"Invalid datatype {datatype}")
-    reg.SetValueEx(key, value_name, 0, datatype, new_value)
+    reg.SetValueEx(key, value_name, 00, regtype, new_value)
 
 
 def openRegistryKey(path):
@@ -63,7 +65,7 @@ def openRegistryKey(path):
     if initial_key is None:
         raise ValueError(f"Invalid root directory {rootdir}")
     try:
-        key = reg.OpenKeyEx(initial_key, path[len(rootdir) + 1:] + '\\')
+        key = reg.OpenKeyEx(initial_key, path[len(rootdir) + 1:] + '\\', 0, reg.KEY_ALL_ACCESS)
     except PermissionError:
         print(f"Permission denied to open {path}")
         return None
