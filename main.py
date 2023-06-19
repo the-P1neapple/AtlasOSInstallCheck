@@ -84,9 +84,8 @@ def checkAndResetValue(path, value_name, original_value, datatype):
         if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and input(f"The registery value {value_name} at {path} is set to {str(value)} instead of {str(original_value)}. Do you want to reset it? (y/n) ") == 'y':
             print(f"Resetting registery value {value_name} at {path} to {original_value}")
 
-            print("DEV MODE, NOT ACTUALLY RESETING")
-            #setRegistryValue(key, value_name, original_value, datatype)
-            #TODO RESTORE FOR PROD
+            #print("DEV MODE, NOT ACTUALLY RESETING")
+            setRegistryValue(key, value_name, original_value, datatype)
 
         reg.CloseKey(key)
 
@@ -98,9 +97,8 @@ def checkValueExistsAndDelete(path, value_name):
         if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
             print(f"Deleting registery value {value_name} at {path}")
 
-            print("DEV MODE, NOT ACTUALLY DELETING")
-            #reg.DeleteValue(key, value_name)
-            #TODO RESTORE FOR PROD
+            #print("DEV MODE, NOT ACTUALLY DELETING")
+            reg.DeleteValue(key, value_name)
 
         reg.CloseKey(key)
 
