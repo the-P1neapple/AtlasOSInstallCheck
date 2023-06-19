@@ -131,6 +131,7 @@ def processActions(yaml_content):
         elif 'registryValue' in keys:
             if action['registryValue'].get('operation') == 'delete':
                 checkValueExistsAndDelete(action['registryValue']['path'], action['registryValue']['value'])
+                continue
             try:
                 checkAndResetValue(action['registryValue']['path'], action['registryValue']['value'],
                                    action['registryValue']['data'], action['registryValue']['type'])
