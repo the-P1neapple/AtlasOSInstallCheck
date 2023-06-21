@@ -2,6 +2,7 @@ import winreg as reg
 import re
 import yaml
 import sys
+import os
 
 
 def getRegistryValue(key, value_name, deletion_detection=False):
@@ -76,6 +77,9 @@ def openRegistryKey(path):
 
 
 def checkAndResetValue(path, value_name, original_value, datatype):
+    # Skipping these registry values as these two define the pinned values in the taskbar
+    if path == "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" and (value_name == "FavoritesResolve" or value_name == "Favorites"):
+        return
     key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name)
@@ -83,8 +87,6 @@ def checkAndResetValue(path, value_name, original_value, datatype):
             original_value = bytes.fromhex(original_value)
         if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and input(f"The registery value {value_name} at {path} is set to {str(value)} instead of {str(original_value)}. Do you want to reset it? (y/n) ") == 'y':
             print(f"Resetting registery value {value_name} at {path} to {original_value}")
-
-            #print("DEV MODE, NOT ACTUALLY RESETING")
             setRegistryValue(key, value_name, original_value, datatype)
 
         reg.CloseKey(key)
@@ -96,8 +98,6 @@ def checkValueExistsAndDelete(path, value_name):
         value = getRegistryValue(key, value_name, True)
         if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
             print(f"Deleting registery value {value_name} at {path}")
-
-            #print("DEV MODE, NOT ACTUALLY DELETING")
             reg.DeleteValue(key, value_name)
 
         reg.CloseKey(key)
@@ -155,10 +155,16 @@ def main():
     if len(args) != 1 or (args[0] == '-h' or args[0] == '--help'):
         print("Usage: python3 main.py <path to Atlas Playbook Directory>\nTo get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)")
         exit(1)
-    path = args[0]
-    configpath = path + "\\Configuration\\features\\atlas\\config.yml"
-    configdata = readYamlFile(configpath)
-    processActions(configdata)
+    config_path = args[0] + "\\Configuration\\"
+    config_dir_content = os.listdir(config_path)
+    if "custom.yml" not in config_dir_content:
+        print("Could not find custom.yml in the configuration directory. Please make sure you are pointing to the correct directory")
+        exit(1)
+    config_data = readYamlFile(config_path + "custom.yml")
+    yml_files_list = config_data['features']
+    for file in yml_files_list:
+        yml_file = readYamlFile(config_path + file)
+        processActions(yml_file)
     exit(0)
 
 
