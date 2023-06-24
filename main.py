@@ -97,8 +97,11 @@ def checkAndResetValue(path, value_name, original_value, datatype):
 def checkKeyExistsAndDelete(path):
     key = openRegistryKey(path)
     if key and input(f"The registery key {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
-        print(f"Deleting registery key {path}")
-        reg.DeleteKey(key, "")
+        try:
+            reg.DeleteKey(key, "")
+            print(f"Deleting registery key {path}")
+        except PermissionError:
+            print(f"Cannot delete regitry key {path}: Permission Error")
     reg.CloseKey(key)
 
 
@@ -107,16 +110,18 @@ def checkValueExistsAndDelete(path, value_name):
     if key:
         value = getRegistryValue(key, value_name, True)
         if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
-            print(f"Deleting registery value {value_name} at {path}")
             reg.DeleteValue(key, value_name)
-
+            print(f"Deleting registery value {value_name} at {path}")
         reg.CloseKey(key)
 
 
 def checkFileExistsAndDelete(filepath):
     file = pathlib.Path(filepath)
     if file.exists() and input(f"The file {filepath} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
-        rmtree(filepath)
+        try:
+            rmtree(filepath)
+        except PermissionError:
+            print(f"Unable to remove file {filepath} : Permission Error")
 
 
 def customConstructor(loader, tag_suffix, node):
