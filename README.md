@@ -10,4 +10,4 @@ Run the script with `py main.py <path to Atlas Playbook Directory>`
 
 
 ## Note: this tool is still under developpement so bug may still be present. If you find some, please take the time to report them
-## Moreover, this tool only checks the registry entries.
+## Moreover, this tool only checks the registry entries. (for now)
