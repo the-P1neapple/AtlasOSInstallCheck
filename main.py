@@ -3,6 +3,8 @@ import re
 import yaml
 import sys
 import os
+import pathlib
+from shutil import rmtree
 
 
 def getRegistryValue(key, value_name, deletion_detection=False):
@@ -92,6 +94,14 @@ def checkAndResetValue(path, value_name, original_value, datatype):
         reg.CloseKey(key)
 
 
+def checkKeyExistsAndDelete(path):
+    key = openRegistryKey(path)
+    if key and input(f"The registery key {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
+        print(f"Deleting registery key {path}")
+        reg.DeleteKey(key, "")
+    reg.CloseKey(key)
+
+
 def checkValueExistsAndDelete(path, value_name):
     key = openRegistryKey(path)
     if key:
@@ -101,6 +111,12 @@ def checkValueExistsAndDelete(path, value_name):
             reg.DeleteValue(key, value_name)
 
         reg.CloseKey(key)
+
+
+def checkFileExistsAndDelete(filepath):
+    file = pathlib.Path(filepath)
+    if file.exists() and input(f"The file {filepath} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
+        rmtree(filepath)
 
 
 def customConstructor(loader, tag_suffix, node):
@@ -125,7 +141,7 @@ def processActions(yaml_content):
     for action in actions:
         keys = action.keys()
         if 'registryKey' in keys:
-            pass
+            checkKeyExistsAndDelete(action['registryKey']['path'])
         elif 'registryValue' in keys:
             if action['registryValue'].get('operation') == 'delete':
                 checkValueExistsAndDelete(action['registryValue']['path'], action['registryValue']['value'])
@@ -135,6 +151,8 @@ def processActions(yaml_content):
                                    action['registryValue']['data'], action['registryValue']['type'])
             except KeyError as e:
                 print(f"Missing key {e} in action {action}")
+        elif 'file' in keys:
+            checkFileExistsAndDelete(action['file']['path'])
         else:
             print(f"Unsupported action: {list(keys)[0]}")
 
