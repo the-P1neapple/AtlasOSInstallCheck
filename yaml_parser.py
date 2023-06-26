@@ -1,4 +1,4 @@
-import re
+from re import findall
 import yaml
 
 
@@ -22,7 +22,7 @@ def customConstructor(loader, tag_suffix, node):
 def readYamlFile(filename):
     with open(filename, 'r') as f:
         yaml_str = f.read()
-    tags = set(re.findall(r'!([\w]+)', yaml_str))
+    tags = set(findall(r'!([\w]+)', yaml_str))
     for tag in tags:
         yaml.add_multi_constructor(f"!{tag}", customConstructor)
     data = yaml.load(yaml_str, Loader=yaml.FullLoader)

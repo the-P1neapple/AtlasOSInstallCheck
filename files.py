@@ -1,9 +1,9 @@
-import pathlib
+from pathlib import Path
 from shutil import rmtree
 
 
 def checkFileExistsAndDelete(filepath):
-    file = pathlib.Path(filepath)
+    file = Path(filepath)
     if file.exists() and input(f"The file {filepath} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
         try:
             if file.is_file():
