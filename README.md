@@ -22,7 +22,7 @@ Moreover, this tool only checks registry entries and files.
 ### To request additional features, or report bugs, please open an issue on the GitHub repository
 
 # Support
-This tool is meant to be used with the Atlas OS playbook, but should be conpatible with any other AME Wizard playbooks. Use it at your own risk
+This tool is meant to be used with the Atlas OS playbook, but should work with any other AME Wizard compatible playbooks. Use it at your own risk
 
 # Credit
 Huge thanks to the AME and Atlas OS team for their amazing work to unbloat Windows and make it more private.
