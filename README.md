@@ -8,9 +8,9 @@ Run the script with `py main.py <path to Atlas Playbook Directory>`
 
 ### Please run the script with Admin privileges to avoid any permission errors (even so, some may occur)
 
+Note: this tool is still under developpement so bugs may still be present. If you find some, please take the time to report them
 
-#### Note: this tool is still under developpement so bugs may still be present. If you find some, please take the time to report them
-#### Moreover, this tool only checks registry entries and files.
+Moreover, this tool only checks registry entries and files.
 
 
 # Planned additionnal features
@@ -20,3 +20,11 @@ Run the script with `py main.py <path to Atlas Playbook Directory>`
 - [ ] Add CLI arguments to only run specific checks
 
 ### To request additional features, or report bugs, please open an issue on the GitHub repository
+
+# Support
+This tool is meant to be used with the Atlas OS playbook, but should be conpatible with any other AME Wizard playbooks. Use it at your own risk
+
+# Credit
+Huge thanks to the AME and Atlas OS team for their amazing work to unbloat Windows and make it more private.
+- [Atlas OS](altasos.net)
+- [AME Wizard](ameliorated.io)
