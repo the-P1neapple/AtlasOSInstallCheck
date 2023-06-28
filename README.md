@@ -14,6 +14,7 @@ Moreover, this tool only checks registry entries and files.
 
 
 # Planned additionnal features
+- [ ] Add compatibilty for AtlasOS 0.3.0
 - [ ] Check task scheduler entries
 - [ ] Check services
 - [ ] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
