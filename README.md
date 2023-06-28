@@ -26,6 +26,7 @@ Moreover, this tool only checks registry entries and files.
 - [ ] Check task scheduler entries
 - [ ] Check services
 - [ ] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
+- [ ] Kill related programs when deleting files
 - [x] Add CLI arguments to only run specific checks
 
 ### To request additional features, or report bugs, please open an issue on the GitHub repository
