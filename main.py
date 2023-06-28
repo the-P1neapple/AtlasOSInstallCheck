@@ -5,6 +5,11 @@ from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
 
 
+checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
+help_msg = """Usage: python3 main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t]
+To get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)"""
+
+
 def processActions(yaml_content):
     actions = yaml_content['actions']
     for action in actions:
@@ -26,13 +31,44 @@ def processActions(yaml_content):
             print(f"Unsupported action: {list(keys)[0]}")
 
 
-def main():
+def parse_args():
     args = argv[1:]
-    if len(args) != 1 or (args[0] == '-h' or args[0] == '--help'):
-        print("Usage: python3 main.py <path to Atlas Playbook Directory>\nTo get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)")
+    if len(args) < 1 or ('-h' in args or '--help' in args):
+        print(help_msg)
         exit(1)
-    config_path = args[0] + "\\Configuration\\"
-    config_dir_content = listdir(config_path)
+    patharg = None
+    for arg in args:
+        if arg.startswith("-"):
+            match arg:
+                case "-r":
+                    checks_state["registry"] = True
+                case "-f":
+                    checks_state["files"] = True
+                case "-s":
+                    checks_state["services"] = True
+                case "-t":
+                    checks_state["schdtasks"] = True
+                case _:
+                    print(f"Unknown argument: {arg}")
+                    exit(1)
+        else:
+            patharg = arg
+    if patharg is None:
+        print(help_msg)
+        exit(1)
+    if True not in checks_state.values():
+        for k in checks_state.keys():
+            checks_state[k] = True
+    return patharg
+
+
+def main():
+    config_path = parse_args() + "\\Configuration\\"
+    try:
+        config_dir_content = listdir(config_path)
+    except FileNotFoundError:
+        print("Could not find the configuration directory. Please make sure you are pointing to the correct directory")
+        exit(1)
     if "custom.yml" not in config_dir_content:
         print("Could not find custom.yml in the configuration directory. Please make sure you are pointing to the correct directory")
         exit(1)

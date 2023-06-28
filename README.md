@@ -4,7 +4,15 @@
 # Usage:
 Download the requirements with `pip install -r requirements.txt`
 
-Run the script with `py main.py <path to Atlas Playbook Directory>`
+Run the script with `py main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t]`
+
+Parameters description :
+- `-r` : Check registry entries
+- `-f` : Check files
+- `-s` : Check services (WIP)
+- `-t` : Check task scheduler entries (WIP)
+
+If no parameters are specified, all checks will be run
 
 ### Please run the script with Admin privileges to avoid any permission errors (even so, some may occur)
 
@@ -18,7 +26,7 @@ Moreover, this tool only checks registry entries and files.
 - [ ] Check task scheduler entries
 - [ ] Check services
 - [ ] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
-- [ ] Add CLI arguments to only run specific checks
+- [x] Add CLI arguments to only run specific checks
 
 ### To request additional features, or report bugs, please open an issue on the GitHub repository
 
