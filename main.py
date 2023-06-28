@@ -38,6 +38,10 @@ def main():
         exit(1)
     config_data = readYamlFile(config_path + "custom.yml")
     yml_files_list = config_data['features']
+    if "tweaks.yml" in yml_files_list:
+        yml_files_list.remove("tweaks.yml")
+        tweaks_data = readYamlFile(config_path + "tweaks.yml")
+        yml_files_list.extend(tweaks_data['features'])
     for file in yml_files_list:
         yml_file = readYamlFile(config_path + file)
         processActions(yml_file)
