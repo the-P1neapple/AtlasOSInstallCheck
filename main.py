@@ -6,17 +6,18 @@ from yaml_parser import readYamlFile
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
-help_msg = """Usage: python3 main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t]
+help_msg = """Usage: python3 main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t] [-y]
 To get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)"""
+skip_prompts = False
 
 
 def processActions(yaml_content):
     actions = yaml_content['actions']
     for action in actions:
         keys = action.keys()
-        if 'registryKey' in keys:
+        if 'registryKey' in keys and checks_state['registry']:
             checkKeyExistsAndDelete(action['registryKey']['path'])
-        elif 'registryValue' in keys:
+        elif 'registryValue' in keys and checks_state['registry']:
             if action['registryValue'].get('operation') == 'delete':
                 checkValueExistsAndDelete(action['registryValue']['path'], action['registryValue']['value'])
                 continue
@@ -25,13 +26,14 @@ def processActions(yaml_content):
                                    action['registryValue']['data'], action['registryValue']['type'])
             except KeyError as e:
                 print(f"Missing key {e} in action {action}")
-        elif 'file' in keys:
+        elif 'file' in keys and checks_state['files']:
             checkFileExistsAndDelete(action['file']['path'])
         else:
             print(f"Unsupported action: {list(keys)[0]}")
 
 
 def parse_args():
+    global skip_prompts
     args = argv[1:]
     if len(args) < 1 or ('-h' in args or '--help' in args):
         print(help_msg)
@@ -48,6 +50,8 @@ def parse_args():
                     checks_state["services"] = True
                 case "-t":
                     checks_state["schdtasks"] = True
+                case "-y":
+                    skip_prompts = True
                 case _:
                     print(f"Unknown argument: {arg}")
                     exit(1)

@@ -11,6 +11,7 @@ Parameters description :
 - `-f` : Check files
 - `-s` : Check services (WIP)
 - `-t` : Check task scheduler entries (WIP)
+- `-y` : Skip confirmation prompts
 
 If no parameters are specified, all checks will be run
 

@@ -1,4 +1,5 @@
 import winreg as reg
+from main import skip_prompts
 
 
 def getRegistryValue(key, value_name, deletion_detection=False):
@@ -81,7 +82,8 @@ def checkAndResetValue(path, value_name, original_value, datatype):
         value = getRegistryValue(key, value_name)
         if datatype == 'REG_BINARY':
             original_value = bytes.fromhex(original_value)
-        if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and input(f"The registery value {value_name} at {path} is set to {str(value)} instead of {str(original_value)}. Do you want to reset it? (y/n) ") == 'y':
+        if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and\
+                (skip_prompts or input(f"The registery value {value_name} at {path} is set to {str(value)} instead of {str(original_value)}. Do you want to reset it? (y/n) ") == 'y'):
             print(f"Resetting registery value {value_name} at {path} to {original_value}")
             setRegistryValue(key, value_name, original_value, datatype)
 
@@ -90,7 +92,7 @@ def checkAndResetValue(path, value_name, original_value, datatype):
 
 def checkKeyExistsAndDelete(path):
     key = openRegistryKey(path)
-    if key and input(f"The registery key {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
+    if key and (skip_prompts or input(f"The registery key {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y'):
         try:
             reg.DeleteKey(key, "")
             print(f"Deleting registery key {path}")
@@ -103,7 +105,7 @@ def checkValueExistsAndDelete(path, value_name):
     key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name, True)
-        if value is not None and input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y':
+        if value is not None and (skip_prompts or input(f"The registery value {value_name} at {path} is set to {str(value)} but should have been removed. Do you want to delete it? (y/n) ") == 'y'):
             reg.DeleteValue(key, value_name)
             print(f"Deleting registery value {value_name} at {path}")
         reg.CloseKey(key)
