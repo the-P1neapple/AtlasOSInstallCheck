@@ -28,6 +28,8 @@ def processActions(yaml_content):
                 print(f"Missing key {e} in action {action}")
         elif 'file' in keys and checks_state['files']:
             checkFileExistsAndDelete(action['file']['path'], skip_prompts)
+        elif 'writeStatus' in keys:
+            continue
         else:
             print(f"Unsupported action: {list(keys)[0]}")
 
