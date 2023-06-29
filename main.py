@@ -16,18 +16,18 @@ def processActions(yaml_content):
     for action in actions:
         keys = action.keys()
         if 'registryKey' in keys and checks_state['registry']:
-            checkKeyExistsAndDelete(action['registryKey']['path'])
+            checkKeyExistsAndDelete(action['registryKey']['path'], skip_prompts)
         elif 'registryValue' in keys and checks_state['registry']:
             if action['registryValue'].get('operation') == 'delete':
-                checkValueExistsAndDelete(action['registryValue']['path'], action['registryValue']['value'])
+                checkValueExistsAndDelete(action['registryValue']['path'], action['registryValue']['value'], skip_prompts)
                 continue
             try:
                 checkAndResetValue(action['registryValue']['path'], action['registryValue']['value'],
-                                   action['registryValue']['data'], action['registryValue']['type'])
+                                   action['registryValue']['data'], action['registryValue']['type'], skip_prompts)
             except KeyError as e:
                 print(f"Missing key {e} in action {action}")
         elif 'file' in keys and checks_state['files']:
-            checkFileExistsAndDelete(action['file']['path'])
+            checkFileExistsAndDelete(action['file']['path'], skip_prompts)
         else:
             print(f"Unsupported action: {list(keys)[0]}")
 
