@@ -4,7 +4,7 @@
 # Usage:
 Download the requirements with `pip install -r requirements.txt`
 
-Run the script with `py main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t]`
+Run the script with `run.cmd <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t]`
 
 Parameters description :
 - `-r` : Check registry entries
@@ -26,7 +26,7 @@ Moreover, this tool only checks registry entries and files.
 - [x] Add compatibilty for AtlasOS 0.3.0
 - [ ] Check task scheduler entries
 - [ ] Check services
-- [ ] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
+- [x] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
 - [ ] Kill related programs when deleting files
 - [x] Add CLI arguments to only run specific checks
 
