@@ -1,23 +1,23 @@
 import winreg as reg
 
+values_exeptions= {
+"HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband": ["FavoritesResolve", "Favorites"],
+}
+
+keys_exceptions = set()
+
 
 def delete_key_with_sub_keys(key):
-    # Enumerate all subkeys
     try:
         i = 0
         while True:
             subkey_name = reg.EnumKey(key, i)
-            # Open the subkey
             subkey = reg.OpenKey(key, subkey_name, 0, reg.KEY_ALL_ACCESS)
-            # Recursive call to delete the subkey
             delete_key_with_sub_keys(subkey)
-            # After the recursive call returns, it means all subkeys of the current subkey have been deleted
-            # So we can delete the current subkey now
             reg.DeleteKey(key, subkey_name)
-            # Close the subkey
             reg.CloseKey(subkey)
             i += 1
-    except WindowsError: # WindowsError will be raised when there are no more subkeys
+    except WindowsError:
         pass
 
 
@@ -93,8 +93,8 @@ def openRegistryKey(path):
 
 
 def checkAndResetValue(path, value_name, original_value, datatype, skip_prompts):
-    # Skipping these registry values as these two define the pinned values in the taskbar
-    if path == "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" and (value_name == "FavoritesResolve" or value_name == "Favorites"):
+    # Skipping values that define user customized values (e.g. taskbar shortcuts)
+    if values_exeptions.get(path) and value_name in values_exeptions.get(path):
         return
     key = openRegistryKey(path)
     if key:
@@ -110,6 +110,8 @@ def checkAndResetValue(path, value_name, original_value, datatype, skip_prompts)
 
 
 def checkKeyExistsAndDelete(path, skip_prompts):
+    if path in keys_exceptions:
+        return
     key = openRegistryKey(path)
     if key and (skip_prompts or input(f"The registery key {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y'):
         try:
