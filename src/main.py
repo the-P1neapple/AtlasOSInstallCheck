@@ -6,7 +6,7 @@ from yaml_parser import readYamlFile
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
-help_msg = """Usage: python3 main.py <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t] [-y]
+help_msg = """Usage:run.cmd <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t] [-y]
 To get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)"""
 skip_prompts = False
 
@@ -31,6 +31,7 @@ def processActions(yaml_content):
         elif 'writeStatus' in keys:
             continue
         else:
+            continue
             print(f"Unsupported action: {list(keys)[0]}")
 
 
