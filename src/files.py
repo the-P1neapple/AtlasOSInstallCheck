@@ -2,8 +2,10 @@ from pathlib import Path
 from shutil import rmtree
 from os import chmod, path, walk
 
-
-files_exeptions = {"C:\\Windows\\SoftwareDistribution"}
+# Note : the following files and folders are ignored because they are recreated by the system at each reboot
+files_exeptions = {
+"C:\\Windows\\SoftwareDistribution"
+}
 
 
 def checkFileExistsAndDelete(filepath, skip_prompts):
