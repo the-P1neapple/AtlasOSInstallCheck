@@ -3,7 +3,7 @@ from shutil import rmtree
 from os import chmod, path, walk
 
 
-files_exeptions = set()
+files_exeptions = {"C:\\Windows\\SoftwareDistribution"}
 
 
 def checkFileExistsAndDelete(filepath, skip_prompts):
