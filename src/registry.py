@@ -11,7 +11,7 @@ keys_exceptions = {
 "HKCU\SOFTWARE\Microsoft\Edge",
 "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU",
 "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags",
-
+"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
 }
 
 
