@@ -2,9 +2,14 @@ import winreg as reg
 
 values_exeptions= {
 "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband": ["FavoritesResolve", "Favorites"],
+"HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot" : "Start"
 }
 
-keys_exceptions = set()
+keys_exceptions = {
+"HKCU\SOFTWARE\Microsoft\Edge",
+"HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU",
+"HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags"
+}
 
 
 def delete_key_with_sub_keys(key):
