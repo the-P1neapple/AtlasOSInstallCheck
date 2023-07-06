@@ -3,6 +3,7 @@ from os import listdir
 from registry import checkKeyExistsAndDelete, checkValueExistsAndDelete, checkAndResetValue
 from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
+from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -29,7 +30,12 @@ def processActions(yaml_content):
         elif 'file' in keys and checks_state['files']:
             checkFileExistsAndDelete(action['file']['path'], skip_prompts)
         elif 'service' in keys and checks_state['services']:
-            continue
+            if action['service'].get('operation') == 'change':
+                checkServiceStartupAndReset(action['service']['name'], action['service']['startup'], skip_prompts)
+            elif action['service'].get('operation') == 'delete':
+                checkServiceExistsAndDelete(action['service']['name'], skip_prompts)
+            else:
+                print("Invalid operation for service", action['service']['operation'])
         else:
             continue
 
