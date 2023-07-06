@@ -4,9 +4,7 @@ import win32service
 
 services_deletion_exceptions = set()
 
-services_reset_exceptions = {
-'MSDTC'
-}
+services_reset_exceptions = set()
 
 
 def get_all_services():
@@ -51,7 +49,7 @@ def checkServiceStartupAndReset(service_name, startup_type, skip_prompts):
     services_names = {service[0] for service in services}
     if service_name in services_names:
         hscm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
-        handle = win32serviceutil.SmartOpenService(hscm, service_name, win32service.SERVICE_ALL_ACCESS)
+        handle = win32serviceutil.SmartOpenService(hscm, service_name, win32service.SERVICE_QUERY_CONFIG | win32service.SERVICE_CHANGE_CONFIG)
         service_info = win32service.QueryServiceConfig(handle)
         if service_info[1] != startup_type and (skip_prompts or input(f"The service {service_name} ({service_info[8]}) is set to {service_info[1]} instead of {startup_type}. Do you want to reset it? (y/n) ") == 'y'):
             win32service.ChangeServiceConfig(handle, win32service.SERVICE_NO_CHANGE, startup_type, win32service.SERVICE_NO_CHANGE, None, None, 0, None, None, None, None)
