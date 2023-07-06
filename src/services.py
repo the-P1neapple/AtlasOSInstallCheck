@@ -31,7 +31,6 @@ def checkServiceExistsAndDelete(service_name, skip_prompts):
 
 
 def checkServiceStartupAndReset(service_name, startup_type, skip_prompts):
-    print('service_startup datatype', type(startup_type))
     try:
         startup_type = int(startup_type)
         if startup_type < 0 or startup_type > 4:
@@ -47,5 +46,6 @@ def checkServiceStartupAndReset(service_name, startup_type, skip_prompts):
         service_info = win32service.QueryServiceConfig(handle)
         if service_info[1] != startup_type and (skip_prompts or input(f"The service {service_name} ({service_info[8]}) is set to {service_info[1]} instead of {startup_type}. Do you want to reset it? (y/n) ") == 'y'):
             win32service.ChangeServiceConfig(handle, win32service.SERVICE_NO_CHANGE, startup_type, win32service.SERVICE_NO_CHANGE, None, None, 0, None, None, None, None)
+            print(f' ==> Resetting service {service_name} ({service_info[8]}) to {startup_type}')
         win32service.CloseServiceHandle(handle)
         win32service.CloseServiceHandle(hscm)
