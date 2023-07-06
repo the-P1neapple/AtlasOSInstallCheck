@@ -2,6 +2,13 @@ import win32serviceutil
 import win32service
 
 
+services_deletion_exceptions = set()
+
+services_reset_exceptions = {
+'MSDTC'
+}
+
+
 def get_all_services():
     accessSCM = win32service.SC_MANAGER_ALL_ACCESS
     hscm = win32service.OpenSCManager(None, None, accessSCM)
@@ -31,6 +38,8 @@ def checkServiceExistsAndDelete(service_name, skip_prompts):
 
 
 def checkServiceStartupAndReset(service_name, startup_type, skip_prompts):
+    if service_name in services_reset_exceptions:
+        return
     try:
         startup_type = int(startup_type)
         if startup_type < 0 or startup_type > 4:
