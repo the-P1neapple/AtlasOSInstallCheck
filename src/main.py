@@ -34,8 +34,6 @@ def processActions(yaml_content):
                 checkServiceStartupAndReset(action['service']['name'], action['service']['startup'], skip_prompts)
             elif action['service'].get('operation') == 'delete':
                 checkServiceExistsAndDelete(action['service']['name'], skip_prompts)
-            else:
-                print("Invalid operation for service", action['service']['operation'])
         else:
             continue
 
