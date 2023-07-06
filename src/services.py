@@ -35,9 +35,10 @@ def checkServiceStartupAndReset(service_name, startup_type, skip_prompts):
     services_names = {service[0] for service in services}
     if service_name in services_names:
         hscm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
-        handle = win32serviceutil.SmartOpenService(None, service_name, win32service.SERVICE_ALL_ACCESS)
+        handle = win32serviceutil.SmartOpenService(hscm, service_name, win32service.SERVICE_ALL_ACCESS)
         service_info = win32service.QueryServiceConfig(handle)
         print(service_info[1], "||", win32service.SERVICE_AUTO_START, win32service.SERVICE_BOOT_START, win32service.SERVICE_DEMAND_START, win32service.SERVICE_DISABLED, win32service.SERVICE_SYSTEM_START)
+        win32service.CloseServiceHandle(handle)
         win32service.CloseServiceHandle(hscm)
         return
         if service_info[1] != startup_type and (skip_prompts or input(f"The service {service_name} is set to {service_info[1]} instead of {startup_type}. Do you want to reset it? (y/n) ") == 'y'):
