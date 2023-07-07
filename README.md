@@ -9,8 +9,8 @@ Run the script with `run.cmd <path to Atlas Playbook Directory> [-r] [-f] [-s] [
 Parameters description :
 - `-r` : Check registry entries
 - `-f` : Check files
-- `-s` : Check services (WIP)
-- `-t` : Check task scheduler entries (WIP)
+- `-s` : Check services
+- `-t` : Check task scheduler entries
 - `-y` : Skip confirmation prompts
 
 If no parameters are specified, all checks will be run
@@ -24,7 +24,7 @@ Moreover, this tool only checks registry entries and files.
 
 # Planned additionnal features
 - [x] Add compatibilty for AtlasOS 0.3.0
-- [ ] Check task scheduler entries
+- [x] Check task scheduler entries
 - [x] Check services
 - [x] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
 - [ ] Kill related programs when deleting files
@@ -39,3 +39,4 @@ This tool is meant to be used with the Atlas OS playbook, but should work with a
 Huge thanks to the AME and Atlas OS team for their amazing work to unbloat Windows and make it more private.
 - [Atlas OS](altasos.net)
 - [AME Wizard](ameliorated.io)
+- Credit to the Atlas OS team for the RunAsTI.cmd script
