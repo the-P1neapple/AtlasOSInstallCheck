@@ -19,8 +19,6 @@ If no parameters are specified, all checks will be run
 
 Note: this tool is still under developpement so bugs may still be present. If you find some, please take the time to report them
 
-Moreover, this tool only checks registry entries and files.
-
 
 # Planned additionnal features
 - [x] Add compatibilty for AtlasOS 0.3.0
