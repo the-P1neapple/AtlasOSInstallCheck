@@ -10,7 +10,7 @@ def checkTasksFolderExistsAndDelete(path, skip_prompts):
         if skip_prompts or input(f"The tasks folder {path} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y':
             for task in task_folder.GetTasks(0):
                 task_folder.DeleteTask(task.Name, 0)
-            run(f'schtasks /Delete /TN {path} /F', check=True, shell=True)
+            run(f'schtasks /Delete /TN /F {path}', check=True, shell=True)
             print(f' ==> Deleting tasks folder {path}')
     except Exception as e:
         print("failed :", e)
