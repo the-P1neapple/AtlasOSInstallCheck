@@ -4,6 +4,7 @@ from registry import checkKeyExistsAndDelete, checkValueExistsAndDelete, checkAn
 from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
+from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -34,6 +35,11 @@ def processActions(yaml_content):
                 checkServiceStartupAndReset(action['service']['name'], action['service']['startup'], skip_prompts)
             elif action['service'].get('operation') == 'delete':
                 checkServiceExistsAndDelete(action['service']['name'], skip_prompts)
+        elif 'scheduledTask' in keys and checks_state['schdtasks']:
+            if action['scheduledTask'].get('operation') == 'delete':
+                checkTaskExistsAndDelete(action['scheduledTask']['path'], skip_prompts)
+            elif action['scheduledTask'].get('operation') == 'deleteFolder':
+                checkTasksFolderExistsAndDelete(action['scheduledTask']['path'], skip_prompts)
         else:
             continue
 
