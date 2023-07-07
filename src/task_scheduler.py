@@ -11,7 +11,8 @@ def checkTasksFolderExistsAndDelete(path, skip_prompts):
                 task_folder.DeleteTask(task.Name, 0)
             scheduler.DeleteFolder(path)
             print(f' ==> Deleting tasks folder {path}')
-    except:
+    except Exception as e:
+        print("failed :", e)
         pass
 
 
