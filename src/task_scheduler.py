@@ -18,7 +18,6 @@ def checkTasksFolderExistsAndDelete(path, skip_prompts):
             print(f' ==> Deleting tasks folder {path}')
     except:
         pass
-    scheduler.Disconnect()
 
 
 def checkTaskExistsAndDelete(path, skip_prompts):
@@ -33,4 +32,3 @@ def checkTaskExistsAndDelete(path, skip_prompts):
             print(f' ==> Deleting task {path}')
     except:
         pass
-    scheduler.Disconnect()
