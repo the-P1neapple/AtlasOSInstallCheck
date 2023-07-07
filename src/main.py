@@ -3,6 +3,7 @@ from os import listdir
 from registry import checkKeyExistsAndDelete, checkValueExistsAndDelete, checkAndResetValue
 from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
+from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -28,12 +29,13 @@ def processActions(yaml_content):
                 print(f"Missing key {e} in action {action}")
         elif 'file' in keys and checks_state['files']:
             checkFileExistsAndDelete(action['file']['path'], skip_prompts)
-        elif 'writeStatus' in keys:
-            continue
+        elif 'service' in keys and checks_state['services']:
+            if action['service'].get('operation') == 'change':
+                checkServiceStartupAndReset(action['service']['name'], action['service']['startup'], skip_prompts)
+            elif action['service'].get('operation') == 'delete':
+                checkServiceExistsAndDelete(action['service']['name'], skip_prompts)
         else:
             continue
-            print(f"Unsupported action: {list(keys)[0]}")
-
 
 def parse_args():
     global skip_prompts
