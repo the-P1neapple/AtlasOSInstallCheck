@@ -7,7 +7,7 @@ def checkTasksFolderExistsAndDelete(path, skip_prompts):
     scheduler.Connect()
     command = (
         f'powershell.exe -Command "'
-        f'Get-ScheduledTask -TaskPath \'{path}\'* | Unregister-ScheduledTask -Confirm:$false'
+        f'Get-ScheduledTask -TaskPath \'{path}\\*\' | Unregister-ScheduledTask -Confirm:$false'
         f'"'
     )
     try:
