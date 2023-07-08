@@ -36,5 +36,5 @@ This tool is meant to be used with the Atlas OS playbook, but should work with a
 # Credit
 Huge thanks to the AME and Atlas OS team for their amazing work to unbloat Windows and make it more private.
 - [Atlas OS](https://atlasos.net/)
-- [AME Wizard](ameliorated.io)
+- [AME Wizard](https://ameliorated.io/)
 - Credit to the Atlas OS team for the RunAsTI.cmd script
