@@ -87,7 +87,7 @@ def main():
             run(r'mkdir .\playbook', check=True, shell=True, stdout=DEVNULL)
             try:
                 file.extractall(path='./playbook')
-            except Exception:
+            except py7zr.exceptions.UnsupportedCompressionMethodError:
                 pass
         param = r'.\playbook'
     else:
