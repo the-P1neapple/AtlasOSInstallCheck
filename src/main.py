@@ -68,6 +68,7 @@ def parse_args():
                     skip_prompts = True
                 case _:
                     print(f"Unknown argument: {arg}")
+                    print(f"\n{help_msg}")
                     exit(1)
         else:
             patharg = arg
