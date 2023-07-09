@@ -104,6 +104,8 @@ def checkAndResetValue(path, value_name, original_value, datatype, skip_prompts)
     # Skipping values that define user customized values (e.g. taskbar shortcuts)
     if values_exeptions.get(path) and value_name in values_exeptions.get(path):
         return
+    if r"HKCU\SOFTWARE\Classes\." in path:
+        return
     key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name)
