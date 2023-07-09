@@ -25,7 +25,7 @@ def checkFileExistsAndDelete(filepath, skip_prompts):
     if filepath in files_exeptions:
         return
     file = Path(filepath)
-    if file.exists() and (skip_prompts or input(f"The file {filepath} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y'):
+    if file.exists() and (skip_prompts or input(f"The {'file' if file.is_file() else 'directory'} {filepath} exists but should have been removed. Do you want to delete it? (y/n) ") == 'y'):
         try:
             if file.is_file():
                 killFileProcess(filepath)
