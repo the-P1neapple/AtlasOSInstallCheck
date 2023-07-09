@@ -84,7 +84,8 @@ def main():
     if original_param.endswith(".apbx"):
         run(rf'copy {original_param} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
         with py7zr.SevenZipFile('playbook.7z', mode='r', password='malte') as file:
-            file.extractall(path='./')
+            run('mkdir playbook')
+            file.extractall(path='./playbook')
         param = r'.\playbook'
     else:
         param = original_param
