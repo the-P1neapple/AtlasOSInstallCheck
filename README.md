@@ -19,7 +19,6 @@ If no parameters are specified, all checks will be run
 
 Note: this tool is still under developpement so bugs may still be present. If you find some, please take the time to report them
 
-
 # Planned additionnal features
 - [x] Add compatibilty for AtlasOS 0.3.0
 - [x] Check task scheduler entries
@@ -32,6 +31,8 @@ Note: this tool is still under developpement so bugs may still be present. If yo
 
 # Support
 This tool is meant to be used with the Atlas OS playbook, but should work with any other AME Wizard compatible playbooks. Use it at your own risk
+
+## WARNING : This is not meant to apply the playbook ! Many essential steps are skipped ! Please use the standard means of installation !
 
 # Credit
 Huge thanks to the AME and Atlas OS team for their amazing work to unbloat Windows and make it more private.
