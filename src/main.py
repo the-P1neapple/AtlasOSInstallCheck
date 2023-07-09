@@ -82,8 +82,8 @@ def parse_args():
 def main():
     original_param = parse_args()
     if original_param.endswith(".apbx"):
-        run(rf'copy {original_param} .\playbook.zip', check=True, shell=True, stdout=DEVNULL)
-        with zipfile.ZipFile('playbook.zip', 'r') as file:
+        run(rf'copy {original_param} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
+        with zipfile.ZipFile('playbook.7z', 'r') as file:
             file.extractall(pwd=bytes('malte', 'utf-8'))
         param = r'.\playbook'
     else:
