@@ -31,6 +31,7 @@ def checkFileExistsAndDelete(filepath, skip_prompts):
                 killFileProcess(filepath)
                 chmod(filepath, 0o777)
                 print(f" ==> Removing file {filepath}")
+                file = Path(filepath)
                 file.unlink()
             else:
                 for root, dirs, files in walk(filepath):
