@@ -25,7 +25,7 @@ Note: this tool is still under developpement so bugs may still be present. If yo
 - [x] Check task scheduler entries
 - [x] Check services
 - [x] Add Trusted Installer / SYSTEM privilege escalation to avoid any permission errors
-- [x] Kill related programs when deleting files (OK but tasks started by the kernel (PID 0) obviously cannot be killed)
+- [x] Kill related programs when deleting files
 - [x] Add CLI arguments to only run specific checks
 
 ### To request additional features, or report bugs, please open an issue on the GitHub repository
