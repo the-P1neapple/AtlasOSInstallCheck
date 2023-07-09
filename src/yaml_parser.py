@@ -27,3 +27,23 @@ def readYamlFile(filename):
         yaml.add_multi_constructor(f"!{tag}", customConstructor)
     data = yaml.load(yaml_str, Loader=yaml.FullLoader)
     return data
+
+def readYaml(yaml_str, filename):
+    try:
+        #print(yaml_str)
+        tags = set(findall(r'!([\w]+)', yaml_str))
+        print("TAGS!\n")
+        print(tags)
+        print("\n")
+        if tags != "":
+            for tag in tags:
+                print(tag)
+                yaml.add_multi_constructor(f"!{tag}", customConstructor)
+    except:
+        if 'custom.yml' or 'tweaks.yml' in filename:
+            pass
+        else:
+            print("No Tags Found")
+            exit(1)
+    data = yaml.load(yaml_str, Loader=yaml.FullLoader)
+    return data

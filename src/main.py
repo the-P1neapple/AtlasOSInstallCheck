@@ -1,8 +1,8 @@
 from sys import argv
-from os import listdir
+from zipfile import ZipFile
 from registry import checkKeyExistsAndDelete, checkValueExistsAndDelete, checkAndResetValue
 from files import checkFileExistsAndDelete
-from yaml_parser import readYamlFile
+from yaml_parser import readYamlFile, readYaml
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
 
@@ -78,23 +78,25 @@ def parse_args():
 
 
 def main():
-    config_path = parse_args() + "\\Configuration\\"
+    config_path = parse_args()
     try:
-        config_dir_content = listdir(config_path)
+        zip = ZipFile(config_path)
+        config_dir_content = zip.namelist()
     except FileNotFoundError:
         print("Could not find the configuration directory. Please make sure you are pointing to the correct directory")
         exit(1)
-    if "custom.yml" not in config_dir_content:
+    if "Configuration/custom.yml" not in config_dir_content:
         print("Could not find custom.yml in the configuration directory. Please make sure you are pointing to the correct directory")
         exit(1)
-    config_data = readYamlFile(config_path + "custom.yml")
+    config_data = readYaml(zip.read('Configuration/custom.yml'), 'custom.yml')
     yml_files_list = config_data['features']
     if "tweaks.yml" in yml_files_list:
         yml_files_list.remove("tweaks.yml")
-        tweaks_data = readYamlFile(config_path + "tweaks.yml")
+        tweaks_data = readYaml(zip.read('Configuration/tweaks.yml'), 'tweaks.yml')
         yml_files_list.extend(tweaks_data['features'])
     for file in yml_files_list:
-        yml_file = readYamlFile(config_path + file)
+        file = file.replace("\\","/")
+        yml_file = readYaml(zip.read('Configuration/' + file), file)
         processActions(yml_file)
     exit(0)
 
