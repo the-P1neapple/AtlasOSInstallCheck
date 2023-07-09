@@ -6,7 +6,8 @@ from yaml_parser import readYamlFile
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
 from subprocess import run, DEVNULL
-import py7zr
+from py7zr import SevenZipFile
+from py7zr.exceptions import UnsupportedCompressionMethodError
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -67,6 +68,7 @@ def parse_args():
                     skip_prompts = True
                 case _:
                     print(f"Unknown argument: {arg}")
+                    print(f"\n{help_msg}")
                     exit(1)
         else:
             patharg = arg
@@ -81,12 +83,12 @@ def parse_args():
 
 def extract_apbx(path):
     run(rf'copy {path} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
-    with py7zr.SevenZipFile('playbook.7z', mode='r', password='malte') as file:
+    with SevenZipFile('playbook.7z', mode='r', password='malte') as file:
         run(r'mkdir .\playbook', check=True, shell=True, stdout=DEVNULL)
         try:
             file.extractall(path='./playbook')
         # I don't know why, but it throws this error even though it works
-        except py7zr.exceptions.UnsupportedCompressionMethodError:
+        except UnsupportedCompressionMethodError:
             pass
 
 
