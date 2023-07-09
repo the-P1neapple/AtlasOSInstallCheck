@@ -85,7 +85,10 @@ def main():
         run(rf'copy {original_param} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
         with py7zr.SevenZipFile('playbook.7z', mode='r', password='malte') as file:
             run(r'mkdir .\playbook', check=True, shell=True, stdout=DEVNULL)
-            file.extractall(path='./playbook')
+            try:
+                file.extractall(path='./playbook')
+            except Exception:
+                pass
         param = r'.\playbook'
     else:
         param = original_param
