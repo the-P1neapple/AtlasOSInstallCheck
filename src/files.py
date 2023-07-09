@@ -17,7 +17,9 @@ def killFileProcess(filename):
                 if p.exe() == filename:
                     print(f" ==> Killing process {p.name()} (PID {p.pid})")
                     p.kill()
-            except (psutil.AccessDenied, psutil.NoSuchProcess):
+            except (psutil.AccessDenied, psutil.NoSuchProcess) as e:
+                if p.exe() == filename and e == psutil.AccessDenied:
+                    print(f" ==> Unable to kill process {p.name()} (PID {p.pid}) : Access Denied")
                 pass
 
 
@@ -31,8 +33,8 @@ def checkFileExistsAndDelete(filepath, skip_prompts):
                 killFileProcess(filepath)
                 chmod(filepath, 0o777)
                 print(f" ==> Removing file {filepath}")
-                file = Path(filepath)
-                file.unlink()
+                f = Path(filepath)
+                f.unlink()
             else:
                 for root, dirs, files in walk(filepath):
                     for d in dirs:
