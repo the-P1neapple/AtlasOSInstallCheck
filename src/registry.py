@@ -109,6 +109,9 @@ def checkAndResetValue(path, value_name, original_value, datatype, skip_prompts)
     key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name)
+        if value is None:
+            reg.CloseKey(key)
+            return
         if datatype == 'REG_BINARY':
             original_value = bytes.fromhex(original_value)
         if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and\
