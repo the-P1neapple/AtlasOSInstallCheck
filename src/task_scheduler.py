@@ -2,7 +2,18 @@ import win32com.client
 from subprocess import run, DEVNULL
 
 
+tasks_folder_exceptions = {
+    r"\Microsoft\Windows\UpdateOrchestrator",
+}
+
+task_exception = {
+    r"\Microsoft\Windows\WindowsUpdate\Scheduled Start"
+}
+
+
 def checkTasksFolderExistsAndDelete(path, skip_prompts):
+    if path in tasks_folder_exceptions:
+        return
     scheduler = win32com.client.Dispatch('Schedule.Service')
     scheduler.Connect()
     command = (
@@ -21,6 +32,8 @@ def checkTasksFolderExistsAndDelete(path, skip_prompts):
 
 
 def checkTaskExistsAndDelete(path, skip_prompts):
+    if path in task_exception:
+        return
     scheduler = win32com.client.Dispatch('Schedule.Service')
     scheduler.Connect()
     try:

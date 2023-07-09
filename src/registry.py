@@ -2,16 +2,16 @@ import winreg as reg
 
 # Note : the following values and keys are ignored because they are recreated by the system at each reboot
 values_exeptions= {
-"HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband": ["FavoritesResolve", "Favorites"],
-"HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot" : "Start",
-"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData": "AllowLockScreen",
+    "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband": ["FavoritesResolve", "Favorites"],
+    "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot" : "Start",
+    "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData": "AllowLockScreen",
 }
 
 keys_exceptions = {
-"HKCU\SOFTWARE\Microsoft\Edge",
-"HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU",
-"HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags",
-"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
+    "HKCU\SOFTWARE\Microsoft\Edge",
+    "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU",
+    "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags",
+    "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
 }
 
 
@@ -109,6 +109,9 @@ def checkAndResetValue(path, value_name, original_value, datatype, skip_prompts)
     key = openRegistryKey(path)
     if key:
         value = getRegistryValue(key, value_name)
+        if value is None:
+            reg.CloseKey(key)
+            return
         if datatype == 'REG_BINARY':
             original_value = bytes.fromhex(original_value)
         if (str(value) != str(original_value) and not (str(original_value) == "" and str(value) == "None")) and\
