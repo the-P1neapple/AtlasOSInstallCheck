@@ -5,10 +5,12 @@ from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
+from subprocess import run, DEVNULL
+import py7zr
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
-help_msg = """Usage:run.cmd <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t] [-y]
+help_msg = """Usage:run.cmd <path to Atlas Playbook (.apbx or extracted directory)> [-r] [-f] [-s] [-t] [-y]
 To get the Atlas Playbook Directory, download the Atlas Playbook https://atlasos.net/ and extract it (password: malte)"""
 skip_prompts = False
 
@@ -77,8 +79,25 @@ def parse_args():
     return patharg
 
 
+def extract_apbx(path):
+    run(rf'copy {path} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
+    with py7zr.SevenZipFile('playbook.7z', mode='r', password='malte') as file:
+        run(r'mkdir .\playbook', check=True, shell=True, stdout=DEVNULL)
+        try:
+            file.extractall(path='./playbook')
+        # I don't know why, but it throws this error even though it works
+        except py7zr.exceptions.UnsupportedCompressionMethodError:
+            pass
+
+
 def main():
-    config_path = parse_args() + "\\Configuration\\"
+    original_param = parse_args()
+    if original_param.endswith(".apbx"):
+        extract_apbx(original_param)
+        param = r'.\playbook'
+    else:
+        param = original_param
+    config_path = param + "\\Configuration\\"
     try:
         config_dir_content = listdir(config_path)
     except FileNotFoundError:
@@ -96,6 +115,9 @@ def main():
     for file in yml_files_list:
         yml_file = readYamlFile(config_path + file)
         processActions(yml_file)
+    if original_param.endswith(".apbx"):
+        run(rf'del .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
+        run(rf'rmdir .\playbook\ /S /Q', check=True, shell=True, stdout=DEVNULL)
     exit(0)
 
 

@@ -4,7 +4,7 @@
 # Usage:
 Download the requirements with `pip install -r requirements.txt`
 
-Run the script with `run.cmd <path to Atlas Playbook Directory> [-r] [-f] [-s] [-t] [-y]`
+Run the script with `run.cmd <path to Atlas Playbook (.apbx or extracted directory)> [-r] [-f] [-s] [-t] [-y]`
 
 Parameters description :
 - `-r` : Check registry entries
