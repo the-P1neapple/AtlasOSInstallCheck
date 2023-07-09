@@ -6,7 +6,7 @@ from yaml_parser import readYamlFile
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
 from subprocess import run, DEVNULL
-import zipfile
+import py7zr
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -82,9 +82,9 @@ def parse_args():
 def main():
     original_param = parse_args()
     if original_param.endswith(".apbx"):
-        run(rf'copy {original_param} .\playbook.zip', check=True, shell=True, stdout=DEVNULL)
-        with zipfile.ZipFile('playbook.zip', 'r') as file:
-            file.extractall(pwd=bytes('malte', 'utf-8'))
+        run(rf'copy {original_param} .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
+        with py7zr.SevenZipFile('playbook.7z', mode='r', password='malte') as file:
+            file.extractall(path='./')
         param = r'.\playbook'
     else:
         param = original_param
@@ -107,7 +107,7 @@ def main():
         yml_file = readYamlFile(config_path + file)
         processActions(yml_file)
     if original_param.endswith(".apbx"):
-        run(rf'del .\playbook.zip', check=True, shell=True, stdout=DEVNULL)
+        run(rf'del .\playbook.7z', check=True, shell=True, stdout=DEVNULL)
         run(rf'rmdir .\playbook\ /S /Q', check=True, shell=True, stdout=DEVNULL)
     exit(0)
 
