@@ -4,10 +4,11 @@ from subprocess import run, DEVNULL
 
 tasks_folder_exceptions = {
     r"\Microsoft\Windows\UpdateOrchestrator",
-    r"\Microsoft\Windows\WindowsUpdate\Scheduled Start"
 }
 
-task_exception = set()
+task_exception = {
+    r"\Microsoft\Windows\WindowsUpdate\Scheduled Start"
+}
 
 
 def checkTasksFolderExistsAndDelete(path, skip_prompts):
