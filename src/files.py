@@ -18,8 +18,6 @@ def killFileProcess(filename):
                     print(f" ==> Killing process {p.name()} (PID {p.pid})")
                     p.kill()
             except (psutil.AccessDenied, psutil.NoSuchProcess) as e:
-                if p.exe() == filename and e == psutil.AccessDenied:
-                    print(f" ==> Unable to kill process {p.name()} (PID {p.pid}) : Access Denied")
                 pass
 
 
