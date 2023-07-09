@@ -5,6 +5,8 @@ from files import checkFileExistsAndDelete
 from yaml_parser import readYamlFile
 from services import checkServiceStartupAndReset, checkServiceExistsAndDelete
 from task_scheduler import checkTaskExistsAndDelete, checkTasksFolderExistsAndDelete
+from subprocess import run, DEVNULL
+import zipfile
 
 
 checks_state = {"registry": False, "files": False, "services": False, "schdtasks": False}
@@ -78,7 +80,15 @@ def parse_args():
 
 
 def main():
-    config_path = parse_args() + "\\Configuration\\"
+    original_param = parse_args()
+    if original_param.endswith(".apbx"):
+        run(rf'copy {original_param} .\playbook.zip', check=True, shell=True, stdout=DEVNULL)
+        with zipfile.ZipFile('playbook.zip', 'r') as file:
+            file.extractall(pwd=bytes('malte', 'utf-8'))
+        param = r'.\playbook'
+    else:
+        param = original_param
+    config_path = param + "\\Configuration\\"
     try:
         config_dir_content = listdir(config_path)
     except FileNotFoundError:
@@ -96,6 +106,9 @@ def main():
     for file in yml_files_list:
         yml_file = readYamlFile(config_path + file)
         processActions(yml_file)
+    if original_param.endswith(".apbx"):
+        run(rf'del .\playbook.zip', check=True, shell=True, stdout=DEVNULL)
+        run(rf'rmdir .\playbook\ /S /Q', check=True, shell=True, stdout=DEVNULL)
     exit(0)
 
 
